@@ -59,34 +59,6 @@ resource "kubernetes_namespace" "papa_webapp" {
   }
 }
 
-# resource "kubernetes_namespace" "ingress_nginx" {
-#   metadata {
-#     annotations = {
-#       name = "ingress-nginx"
-#     }
-
-#     name = "ingress-nginx"
-#   }
-# }
-
-# resource "helm_release" "ingress_nginx" {
-#   name      = "ingress-nginx"
-#   namespace = "ingress-nginx"
-
-#   repository = "https://kubernetes.github.io/ingress-nginx"
-#   chart      = "ingress-nginx"
-
-#   set {
-#     name  = "controller.service.type"
-#     value = "ClusterIP"
-#   }
-
-#   set {
-#     name  = "defaultBackend.enabled"
-#     value = true
-#   }
-# }
-
 module "load_balancer_controller" {
   source  = "DNXLabs/eks-lb-controller/aws"
   version = "0.5.1"
@@ -96,25 +68,3 @@ module "load_balancer_controller" {
   cluster_name                     = module.papa.cluster_id
   helm_chart_version               = "1.3.3"
 }
-
-
-# module "nginx-controller" {
-#   source                      = "terraform-iaac/nginx-controller/helm"
-#   chart_version               = "4.0.16"
-#   controller_kind             = "Deployment"
-#   version                     = "2.0.0"
-#   disable_heavyweight_metrics = true
-
-#   additional_set = [
-#     {
-#       name  = "alb.ingress.kubernetes.io/load-balancer-name"
-#       value = "papa-lb"
-#       type  = "string"
-#     },
-#     {
-#       name  = "alb.ingress.kubernetes.io/scheme"
-#       value = "internet-facing"
-#       type  = "string"
-#     }
-#   ]
-# }
